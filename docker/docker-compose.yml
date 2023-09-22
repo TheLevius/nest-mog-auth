@@ -1,0 +1,38 @@
+version: '3.8'
+name: nest-mog-auth
+services:
+  postgres:
+    build: ./postgres
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - nest-auth-net
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - nest-mog-auth-postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_LISTEN_PORT: ${PGADMIN_LISTEN_PORT}
+    networks:
+      - nest-auth-net
+    ports:
+      - "${PGADMIN_LISTEN_PORT}:${PGADMIN_LISTEN_PORT}"
+    volumes:
+      - nest-mog-auth-pgadmin-data:/var/lib/pgadmin
+    restart: unless-stopped
+
+networks:
+  nest-auth-net:
+    driver: bridge
+
+volumes:
+  nest-mog-auth-postgres-data:
+  nest-mog-auth-pgadmin-data:
