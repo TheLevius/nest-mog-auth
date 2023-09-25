@@ -29,13 +29,10 @@ export class UserService {
 			where: { id },
 		});
 	};
+	public compareSync = (currentPasswrod: string, password: string): boolean =>
+		this.hashPassword(currentPasswrod) === this.hashPassword(password);
+
 	private hashPassword = (password: string): string => {
-		return pbkdf2Sync(
-			password,
-			'saltExample',
-			10000,
-			64,
-			'sha256',
-		).toString('hex');
+		return pbkdf2Sync(password, 'saltExample', 10000, 64, 'sha256').toString('hex');
 	};
 }

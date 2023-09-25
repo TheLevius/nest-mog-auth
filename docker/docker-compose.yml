@@ -2,14 +2,16 @@ version: '3.8'
 name: nest-mog-auth
 services:
   postgres:
-    build: ./postgres
+    image: postgres:alpine
     container_name: postgres
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST_AUTH_METHOD: trust
+      PGPORT: ${POSTGRES_PORT}
     networks:
       - nest-auth-net
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - '${POSTGRES_PORT}:${POSTGRES_PORT}'
     volumes:
       - nest-mog-auth-postgres-data:/var/lib/postgresql/data
     restart: unless-stopped
